@@ -36,7 +36,7 @@
     //#define BI
     //#define TRI
     //#define QUADP
-    //#define QUADX
+    #define QUADX
     //#define Y4
     //#define Y6
     //#define HEX6
@@ -64,7 +64,7 @@
 
   /****************************    Motor maxthrottle    *******************************/
     /* this is the maximum value for the ESCs at full power, this value can be increased up to 2000 */
-    #define MAXTHROTTLE 1850
+    #define MAXTHROTTLE 2000
 
   /****************************    Mincommand          *******************************/
     /* this is the value for the ESCs when they are not armed
@@ -461,10 +461,10 @@
 
   /******                Serial com speed    *********************************/
     /* This is the speed of the serial interfaces */
-    #define SERIAL0_COM_SPEED 115200
-    #define SERIAL1_COM_SPEED 115200
-    #define SERIAL2_COM_SPEED 115200
-    #define SERIAL3_COM_SPEED 115200
+    #define SERIAL0_COM_SPEED 38400
+//    #define SERIAL1_COM_SPEED 115200
+//    #define SERIAL2_COM_SPEED 115200
+//    #define SERIAL3_COM_SPEED 115200
 
     /* interleaving delay in micro seconds between 2 readings WMP/NK in a WMP+NK config
        if the ACC calibration time is very long (20 or 30s), try to increase this delay up to 4000

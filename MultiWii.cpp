@@ -349,6 +349,11 @@ void annexCode() { // this code is excetuted at each loop and won't interfere wi
       else { tmp=0; }
     #endif
     if(axis!=2) { //ROLL & PITCH
+      // 在Angle模式下，D/R小舵设置为：副翼 60%，升降 60%。
+      if (f.ANGLE_MODE)
+      {
+        tmp = tmp * 6 / 10;
+      }
       tmp2 = tmp>>7; // 500/128 = 3.9  => range [0;3]
       rcCommand[axis] = lookupPitchRollRC[tmp2] + ((tmp-(tmp2<<7)) * (lookupPitchRollRC[tmp2+1]-lookupPitchRollRC[tmp2])>>7);
       prop1 = 128-((uint16_t)conf.rollPitchRate*tmp>>9); // prop1 was 100, is 128 now -- and /512 instead of /500
@@ -356,6 +361,11 @@ void annexCode() { // this code is excetuted at each loop and won't interfere wi
       dynP8[axis] = (uint16_t)conf.pid[axis].P8*prop1>>7; // was /100, is /128 now
       dynD8[axis] = (uint16_t)conf.pid[axis].D8*prop1>>7; // was /100, is /128 now
     } else {      // YAW
+      // 在Angle模式下，D/R小舵设置为：方向 70%。
+      if (f.ANGLE_MODE)
+      {
+        tmp = tmp * 7 / 10;
+      }
       rcCommand[axis] = tmp;
     }
     if (rcData[axis]<MIDRC) rcCommand[axis] = -rcCommand[axis];
@@ -832,12 +842,10 @@ void loop () {
     }
     if(rcDelayCommand == 20) {
       if(f.ARMED) {                   // actions during armed
-        #ifdef ALLOW_ARM_DISARM_VIA_TX_YAW
-          if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_LO + PIT_CE + ROL_CE) go_disarm();    // Disarm via YAW
-        #endif
-        #ifdef ALLOW_ARM_DISARM_VIA_TX_ROLL
-          if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_CE + PIT_CE + ROL_LO) go_disarm();    // Disarm via ROLL
-        #endif
+          // 加锁方式改为允许油门最低、副翼最右、方向最左、升降最低
+          // 兼容 APM 和 DJI 两种操作习惯。
+          if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_LO + PIT_CE + ROL_CE) go_disarm();    // Disarm
+          if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_LO + PIT_LO + ROL_HI) go_disarm();    // Disarm
       } else {                        // actions during not armed
         i=0;
         if (rcSticks == THR_LO + YAW_LO + PIT_LO + ROL_CE) {    // GYRO calibration
@@ -880,12 +888,10 @@ void loop () {
           #endif
           previousTime = micros();
         }
-        #ifdef ALLOW_ARM_DISARM_VIA_TX_YAW
-          else if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_HI + PIT_CE + ROL_CE) go_arm();      // Arm via YAW
-        #endif
-        #ifdef ALLOW_ARM_DISARM_VIA_TX_ROLL
-          else if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_CE + PIT_CE + ROL_HI) go_arm();      // Arm via ROLL
-        #endif
+        // 解锁方式改为允许油门最低、副翼最左、方向最右、升降最低
+        // 兼容 APM 和 DJI 两种操作习惯。
+        else if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_HI + PIT_CE + ROL_CE) go_arm();      // Arm
+        else if (conf.activate[BOXARM] == 0 && rcSticks == THR_LO + YAW_HI + PIT_LO + ROL_LO) go_arm();      // Arm
         #ifdef LCD_TELEMETRY_AUTO
           else if (rcSticks == THR_LO + YAW_CE + PIT_HI + ROL_LO) {              // Auto telemetry ON/OFF
             if (telemetry_auto) {
