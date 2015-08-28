@@ -12,10 +12,3 @@
  *
  */
 
-/* 
- * 垂直起降固定翼 MultiWiiVTOL
- * 基于 MWC 2.3
- * 作者: skypup@skypup.org (2015.07.01)
- *
- */
- 
