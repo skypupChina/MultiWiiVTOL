@@ -226,7 +226,8 @@
   #endif  
 #elif defined(BI)
   #define NUMBER_MOTOR     2
-  #define PRI_SERVO_FROM   5 // use servo from 5 to 6
+  // #define PRI_SERVO_FROM   5 // use servo from 5 to 6
+  #define PRI_SERVO_FROM   3
   #define PRI_SERVO_TO     6
 #elif defined(TRI)
   #define NUMBER_MOTOR     3
