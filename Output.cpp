@@ -1156,19 +1156,21 @@ void mixTable() {
   #if defined( MY_PRIVATE_MIXING )
     #include MY_PRIVATE_MIXING
   #elif defined( BI )
-    if (f.ANGLE_MODE) {  // Aircraft
+    if (f.ANGLE_MODE) {  // Aircraft Passthru
       motor[0] = rcCommand[THROTTLE]; // LEFT Motor
       motor[1] = rcCommand[THROTTLE]; // RIGHT Motor
       servo[2] = rcData[YAW];         // Rudder 1
       servo[3] = 3000 - rcData[YAW];  // Rudder 2
-    } else { 
+      servo[4] = (SERVODIR(4,2) * rcCommand[ROLL]) + (SERVODIR(4,1) * rcCommand[PITCH]) + get_middle(4); //LEFT
+      servo[5] = (SERVODIR(5,2) * rcCommand[ROLL]) + (SERVODIR(5,1) * rcCommand[PITCH]) + get_middle(5); //RIGHT
+    } else { // BI
       motor[0] = PIDMIX(+1, 0, 0);    // LEFT Motor
       motor[1] = PIDMIX(-1, 0, 0);    // RIGHT Motor
       servo[2] = 1500;                // Rudder 1
       servo[3] = 1500;                // Rudder 2
+      servo[4] = (SERVODIR(4,2) * axisPID[YAW]) + (SERVODIR(4,1) * axisPID[PITCH]) + get_middle(4); //LEFT
+      servo[5] = (SERVODIR(5,2) * axisPID[YAW]) + (SERVODIR(5,1) * axisPID[PITCH]) + get_middle(5); //RIGHT
     }
-    servo[4] = (SERVODIR(4,2) * axisPID[YAW]) + (SERVODIR(4,1) * axisPID[PITCH]) + get_middle(4); //LEFT
-    servo[5] = (SERVODIR(5,2) * axisPID[YAW]) + (SERVODIR(5,1) * axisPID[PITCH]) + get_middle(5); //RIGHT
   #elif defined( TRI )
     motor[0] = PIDMIX( 0,+4/3, 0); //REAR
     motor[1] = PIDMIX(-1,-2/3, 0); //RIGHT
