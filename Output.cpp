@@ -1159,10 +1159,10 @@ void mixTable() {
     if (f.ANGLE_MODE) {  // Aircraft Passthru
       motor[0] = rcCommand[THROTTLE]; // LEFT Motor
       motor[1] = rcCommand[THROTTLE]; // RIGHT Motor
-      servo[2] = rcData[YAW];         // Rudder 1
-      servo[3] = 3000 - rcData[YAW];  // Rudder 2
-      servo[4] = (SERVODIR(4,2) * rcCommand[ROLL]) + (SERVODIR(4,1) * rcCommand[PITCH]) + get_middle(4); //LEFT
-      servo[5] = (SERVODIR(5,2) * rcCommand[ROLL]) + (SERVODIR(5,1) * rcCommand[PITCH]) + get_middle(5); //RIGHT
+      servo[2] = 3000 - rcData[YAW];         // Rudder 1
+      servo[3] = rcData[YAW];  // Rudder 2
+      servo[4] = - (SERVODIR(4,2) * rcCommand[ROLL]) + (SERVODIR(4,1) * rcCommand[PITCH]) + get_middle(4); //LEFT
+      servo[5] = - (SERVODIR(5,2) * rcCommand[ROLL]) + (SERVODIR(5,1) * rcCommand[PITCH]) + get_middle(5); //RIGHT
     } else { // BI
       motor[0] = PIDMIX(+1, 0, 0);    // LEFT Motor
       motor[1] = PIDMIX(-1, 0, 0);    // RIGHT Motor
